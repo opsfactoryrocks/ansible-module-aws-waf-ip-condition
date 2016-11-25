@@ -47,7 +47,7 @@ except ImportError:
 from ansible.module_utils.basic import *
 from ansible.module_utils.ec2 import *
 
-import q
+# import q
 import hashlib
 import json
 
@@ -105,8 +105,6 @@ def create_ip_set(sid, ips):
   )
 
 def equal_ip_sets(existing_ips, new_ips):
-  q(existing_ips)
-  q(new_ips)
   for ip in existing_ips:
     if not ip in new_ips:
       return False
@@ -129,12 +127,10 @@ def create_ip_condition():
       new_ip_addresses = [ip['Value'] for ip in new_ips]
 
       if len(current_ip_addresses) != len(new_ip_addresses):
-        q('Difference in length betweens lists;')
         changed = True
 
       if not equal_ip_sets(current_ip_addresses, new_ip_addresses) and \
          not changed:
-        q('Difference in items inside lists;')
         changed = True
 
       if changed and len(current_ips):
@@ -144,7 +140,6 @@ def create_ip_condition():
         create_ip_set(condition_id, new_ips)
       except Exception as e:
         if changed:
-          # restore previous values
           create_ip_set(condition_id, current_ips)
 
         raise(e)
